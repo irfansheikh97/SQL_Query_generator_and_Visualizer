@@ -4,7 +4,7 @@
 
 To run the SQL_Query_generator_and_Visualizer locally, follow these steps:
 
-1. Clone the repository: `git clone
+1. Clone the repository: `git clone project_directory
 2. Navigate to the project directory: `cd project_directory`
 3. Install dependencies:
      ```
