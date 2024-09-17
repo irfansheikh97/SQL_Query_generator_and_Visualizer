@@ -1,4 +1,6 @@
-# SQL_Query_generator_and_Visualizer
+# SQL_Query_generator_and_Visualizer 
+App link --> <a href="https://sqlquerygeneratorandvisualizer.streamlit.app">click here</a>
+
 
 ## 🚀 Getting Started
 
