@@ -87,7 +87,7 @@ if st.session_state.user_db is not None:
             st.subheader(":grey[SQL Query:]", anchor=False)
             st.code(st.session_state.sql_query, language='sql')
             st.subheader(":rainbow[Query Results:]", anchor=False)
-            st.dataframe(st.session_state.df, use_container_width=True)
+            st.dataframe(st.session_state.df, use_container_width=True, hide_index=True)
             st.write(st.session_state.df.shape)
             st.subheader(":rainbow[Chart Visualization:]", anchor=False)
             col1, col2 = st.columns(2)
