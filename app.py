@@ -13,7 +13,7 @@ from model_methods import get_response, plot_data, read_sql_query, check_api_key
 # genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Database Path Configuration
-database_path = 'netflix_data.db'
+# database_path = 'netflix_data.db'
 
 # Streamlit web interface configuration
 st.set_page_config(page_title="SQL Query Generator and Visualization Web App", layout="wide", page_icon='📊')
@@ -37,42 +37,32 @@ if 'clicked' not in st.session_state:
 if 'sql_query' not in st.session_state:
     st.session_state.sql_query = ''
 
+if 'user_db' not in st.session_state:
+    st.session_state.user_db = None
+
 
 def click_button():
     st.session_state.clicked = True
 
 
-_, key_col, _ = st.columns([1, 6, 1])
-with key_col:
-    # Enter GOOGLE GEMINI OR OPEN AI API KEY to access on web application
-    st.write('<h4 style="color: #ff3333; text-align: center;">Enter your Gemini API key</h4>',
+# /*---- New code start ----*/
+# Using "with" notation
+with st.sidebar:
+    st.write('<h4 style="color: #ff3333;">Enter your Gemini API key</h4>',
              unsafe_allow_html=True)
     st.session_state.api_key = st.text_input('Enter API Key', type='password', key='st.session_state.api_key',
                                              label_visibility="collapsed")
     if st.session_state.api_key != '':
         check_api_key(st.session_state.api_key)
-    else:
-        st.write("Please enter Valid Gemini API Key..!")
+        st.session_state.user_db = st.file_uploader("Upload your database file ", type=[".sqlite", '.db', '.sql'])
     genai.configure(api_key=st.session_state.api_key)
 
-# Prompt for the Generative Model
-prompt = [
-    """You are an expert in converting English questions to SQL query! The SQL database has the name netflix_data and 
-    it has 5 tables named as netflix, netflix_cast, netflix_country, netflix_directors, netflix_genre. The netflix 
-    table has following columns - show_id, type, title, date_added, release_year, rating, duration, description 
-    \n\nThe netflix_cast table has following columns - show_id, cast \n\nThe netflix_country table has following 
-    columns - show_id, country \n\nThe netflix_directors table has following columns - show_id, director \n\nThe 
-    netflix_genre table has following columns - show_id, genre \n\n For example,\nExample 1 - How many entries of 
-    records are present in particular table?, the SQL command will be something like this SELECT COUNT(*) FROM 
-    netflix ; \nExample 2 - Tell me all the title which was released in 2018?, the SQL command will be something like 
-    this SELECT * FROM netflix where release_year="2018"; also the sql code should not have ``` in beginning or end 
-    and sql word in output All 5 tables have common show_id column which will be reference as key to interlinked the 
-    records to retrieve data from a query"""
-]
-
-if st.session_state.api_key:
-    print(st.session_state.api_key)
+if st.session_state.user_db is not None:
     with st.container():
+        # Prompt for the Generative Model
+        prompt = st.text_area(":red[Enter a Prompt for Model: ]", help="Enter the prompt for AI model to interact with"
+                                                                       "your database file. Basically a role of SQL "
+                                                                       "Expert/Developer.")
         st.subheader(":rainbow[QUERY PLAYGROUND]", anchor=False)
         col1, col2 = st.columns([6, 1], gap="small", vertical_alignment="bottom")
         with col1:
@@ -82,23 +72,26 @@ if st.session_state.api_key:
             submit = st.button("Get Data", help="Click to submit your question.", on_click=click_button)
 
     if submit:
-        if question:
+        if question and prompt:
             st.session_state.sql_query = get_response(question, prompt)
             try:
                 if st.session_state.sql_query:
-                    st.session_state.df = read_sql_query(st.session_state.sql_query, database_path)
+                    # Write the uploaded file to a temporary location
+                    with open('temp_db.sqlite', 'wb') as f:
+                        f.write(st.session_state.user_db.getbuffer())
+                    st.session_state.df = read_sql_query(st.session_state.sql_query, 'temp_db.sqlite')
                     if st.session_state.df.empty:
-                        st.write(
-                            """<h4 style="color: #ff3333;">No results found for the given query. Try another 
+                        st.write("""<h4 style="color: #ff3333;">No results found for the given query. Try another 
                             input...!</h4>""",
-                            unsafe_allow_html=True)
+                                 unsafe_allow_html=True
+                                 )
             except:
                 st.error(
                     "Could not extract SQL query from the response. Please try again to retrieve data or change the "
                     "input with respect to database.")
                 st.stop()
         else:
-            st.error("Please enter a valid Question related to database.")
+            st.error("Please enter a valid Question or Prompt related to database.")
             st.stop()
 
     if not st.session_state.df.empty:
@@ -106,7 +99,8 @@ if st.session_state.api_key:
             st.subheader(":grey[SQL Query:]", anchor=False)
             st.code(st.session_state.sql_query, language='sql')
             st.subheader(":rainbow[Query Results:]", anchor=False)
-            st.dataframe(st.session_state.df)
+            st.dataframe(st.session_state.df, use_container_width=True)
+            st.write(st.session_state.df.shape)
             st.subheader(":rainbow[Chart Visualization:]", anchor=False)
             col1, col2 = st.columns(2)
 
