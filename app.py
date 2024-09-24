@@ -1,19 +1,7 @@
-from dotenv import load_dotenv
 import streamlit as st
 import pandas as pd
-import os
 import google.generativeai as genai
 from model_methods import get_response, plot_data, read_sql_query, check_api_key
-
-# For local use: Create .env file in project repo and store api key in GOOGLE_API_KEY variable to access locally */
-# Load environment variables
-# load_dotenv()
-
-# Google API Configuration
-# genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-# Database Path Configuration
-# database_path = 'netflix_data.db'
 
 # Streamlit web interface configuration
 st.set_page_config(page_title="SQL Query Generator and Visualization Web App", layout="wide", page_icon='📊')

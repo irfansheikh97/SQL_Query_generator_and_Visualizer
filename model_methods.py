@@ -18,10 +18,11 @@ def check_api_key(api_key: str) -> None:
         except Exception as e:
             st.warning(e)
 
+
 # Function to get response from the Generative Model API
 def get_response(question, prompt):
     model = genai.GenerativeModel('gemini-pro')
-    response = model.generate_content([prompt[0], question])
+    response = model.generate_content([prompt, question])
     return response.text
 
 
