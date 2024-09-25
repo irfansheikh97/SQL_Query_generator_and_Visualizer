@@ -36,14 +36,20 @@ def click_button():
 # /*---- New code start ----*/
 # Using "with" notation
 with st.sidebar:
+    st.subheader(":black[APP Configs: ]", anchor=False)
     st.write('<h4 style="color: #ff3333;">Enter your Gemini API key</h4>',
              unsafe_allow_html=True)
     st.session_state.api_key = st.text_input('Enter API Key', type='password', key='st.session_state.api_key',
                                              label_visibility="collapsed")
     if st.session_state.api_key != '':
-        check_api_key(st.session_state.api_key)
-        st.session_state.user_db = st.file_uploader("Upload your database file ", type=[".sqlite", '.db', '.sql'])
-    genai.configure(api_key=st.session_state.api_key)
+        try:
+            is_valid = check_api_key(st.session_state.api_key)
+            if is_valid:
+                st.write("Gemini API Key is valid...!")
+                genai.configure(api_key=st.session_state.api_key)
+                st.session_state.user_db = st.file_uploader("Upload your database file ", type=[".sqlite", '.db', '.sql'])
+        except:
+            st.error("Please pass a valid API key.")
 
 if st.session_state.user_db is not None:
     with st.container():
@@ -54,7 +60,6 @@ if st.session_state.user_db is not None:
         st.subheader(":rainbow[QUERY PLAYGROUND]", anchor=False)
         col1, col2 = st.columns([6, 1], gap="small", vertical_alignment="bottom")
         with col1:
-            # st.write('<h4 style="color: black;">Input your question here:</h4>',unsafe_allow_html=True)
             question = st.text_input("Input your question here: ", key="input", placeholder="Type here...")
         with col2:
             submit = st.button("Get Data", help="Click to submit your question.", on_click=click_button)
@@ -101,4 +106,4 @@ if st.session_state.user_db is not None:
 
         fig = plot_data(st.session_state.df, chart_type, x_col, y_col)
         if fig:
-            st.plotly_chart(fig)
+            st.plotly_chart(fig, theme=None, use_container_width=True)

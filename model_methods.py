@@ -5,18 +5,18 @@ import plotly.express as px
 import google.generativeai as genai
 
 
-def check_api_key(api_key: str) -> None:
+def check_api_key(api_key: str) -> bool:
     '''
-    Function to check whether the API key was really exist.
+    Function to check whether the API key is valid.
     '''
     if len(api_key) != 0:
-        try:
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-pro')
-            response = model.generate_content("Hello")
-            st.write("Gemini API key is valid!")
-        except Exception as e:
-            st.warning(e)
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content("Hello")
+        if response:
+            return True
+        else:
+            return False
 
 
 # Function to get response from the Generative Model API
