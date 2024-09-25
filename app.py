@@ -8,7 +8,7 @@ st.set_page_config(page_title="SQL Query Generator and Visualization Web App", l
 
 st.markdown("""
      <h1 style="color: DarkOrange; text-align: center; width: 100%;">
-     📊 DataQuery Pro: Retrieve Data with Ease
+     Query Data Pro: Upload📁 Ask❓ Visualize📈
      </h1>
      """, unsafe_allow_html=True)
 
