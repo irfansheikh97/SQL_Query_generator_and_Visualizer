@@ -36,7 +36,7 @@ def click_button():
 # /*---- New code start ----*/
 # Using "with" notation
 with st.sidebar:
-    st.subheader(":black[APP Configs: ]", anchor=False)
+    st.subheader("APP Configs: ", anchor=False)
     st.write('<h4 style="color: #ff3333;">Enter your Gemini API key</h4>',
              unsafe_allow_html=True)
     st.session_state.api_key = st.text_input('Enter API Key', type='password', key='st.session_state.api_key',
