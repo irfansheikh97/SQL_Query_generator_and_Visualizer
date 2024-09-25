@@ -17,7 +17,7 @@ This app allows users to upload database files (.sqlite, .db, .sql) and interact
 - Data Retrieval: The app converts the question into a SQL query, executes it on the uploaded database, and returns the results.
 - View Results: The resulting data is displayed in a table for easy analysis and using chart visualiser the data can be viewed in charts/plots format.
 - 
-App link --> <a href="https://sqlquerygeneratorandvisualizer.streamlit.app">click here</a>
+App link --> <a href="https://sql-querygenerator-datavisualizer.streamlit.app">click here</a>
 
 
 ## 🚀 Getting Started
