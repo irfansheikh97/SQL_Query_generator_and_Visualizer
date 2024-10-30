@@ -7,8 +7,12 @@ from views.about_page import about_app
 # Streamlit web interface configuration
 st.set_page_config(page_title="Query Data Pro", layout="wide", page_icon='📊')
 
-st.markdown("""<h1 style=" text-align: center; color: #FF2400;">Query Data Pro: Upload📁 Ask❓ Visualize📈</h1> """, unsafe_allow_html=True)
-
+st.html("""<h1 style=" text-align: center; color: #FF2400;">Query Data Pro: Upload📁 Ask❓ Visualize📈</h1>""")
+st.write("""<div style="margin: 0em 0px; padding: 0px; color: #586e75; background-color: transparent; border-top: none;
+                                        border-right: none; border-left: none; border-image: initial; border-bottom: 2px solid" >
+                            </div>""", 
+                        unsafe_allow_html=True
+                    )
 @st.experimental_dialog("About App", width="large")
 def show_about_app():
     about_app()
@@ -45,7 +49,6 @@ with st.sidebar:
     st.logo("assets/logo.png")
     if st.button("About the App", use_container_width=True):
         show_about_app()
-
     gemini_api_key = st.text_input(label=":key: Enter Gemini API Key :", type='password',
                                    key='api_key')
     if st.session_state.api_key != '':
@@ -58,7 +61,7 @@ with st.sidebar:
                                      type=[".sqlite", '.db', '.sql'], key='db')
         except:
             st.error("Please pass a valid API key.")
-
+    
 if user_database is not None:
     with st.container():
         # Prompt for the Generative Model
@@ -98,10 +101,25 @@ if user_database is not None:
             with st.container():
                 st.subheader(":rainbow[SQL Query:]", anchor=False)
                 st.code(st.session_state.sql_query, language='sql')
+                st.write("""<div style="margin: 0em 0px; padding: 0px; color: #586e75; background-color: transparent; border-top: none;
+                                        border-right: none; border-left: none; border-image: initial; border-bottom: 2px solid" >
+                            </div>""", 
+                        unsafe_allow_html=True
+                    )
                 st.subheader(":rainbow[Query Results:]", anchor=False)
                 st.dataframe(st.session_state.df, use_container_width=True, hide_index=True)
+                st.write("""<div style="margin: 0em 0px; padding: 0px; color: #586e75; background-color: transparent; border-top: none;
+                                        border-right: none; border-left: none; border-image: initial; border-bottom: 2px solid" >
+                            </div>""", 
+                        unsafe_allow_html=True
+                    )
                 st.write("Dataframe has:", st.session_state.df.shape[0], "Rows", "and", st.session_state.df.shape[1],
                         "Columns")
+                st.write("""<div style="margin: 0em 0px; padding: 0px; color: #586e75; background-color: transparent; border-top: none;
+                                        border-right: none; border-left: none; border-image: initial; border-bottom: 2px solid" >
+                            </div>""", 
+                        unsafe_allow_html=True
+                    )
             
             if len(st.session_state.df.columns) > 1:
                 st.subheader(":rainbow[Chart Visualization:]", anchor=False)
@@ -116,6 +134,6 @@ if user_database is not None:
 
                 fig = plot_data(st.session_state.df, chart_type, x_col, y_col)
                 if fig:
-                    st.plotly_chart(fig, theme='streamlit', use_container_width=True)
+                    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
             else:
-                st.write("DataFrame has only 1 column, Please try generating 2 or more columns DataFrame")
+                st.write("DataFrame has only 1 column, Please try generating 2 or more columns DataFrame for chart visualization.")
